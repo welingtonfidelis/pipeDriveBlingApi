@@ -1,16 +1,38 @@
-const js2xmlparser = require("js2xmlparser");
-const axios = require('axios');
 const utils = require('../utils');
 const validateSchema = require('../services/validateSchema');
-const schemaGet = require('../services/schemas/pipedrive/get');
-const schemaShow = require('../services/schemas/pipedrive/show');
+const schemaGetByDate = require('../services/schemas/deal/getByDate');
+const schemaCreate = require('../services/schemas/deal/create');
+const schemaGet = require('../services/schemas/deal/get');
+const schemaShow = require('../services/schemas/deal/show');
 
 const TotalDeal = require('../models/TotalDeal');
 
 module.exports = {
     async index(req, res) {
         try {
-            const selectedTotalDeal = await TotalDeal.find();
+            const { page = 1, limit = 2 } = req.query;
+
+            validateSchema.validate(schemaGet, req.query);
+
+            const selectedTotalDeal = await TotalDeal
+                .find()
+                .skip((page - 1) * limit)
+                .limit(parseInt(limit));
+
+            res.json({ ok: true, data: selectedTotalDeal });
+
+        } catch (error) {
+            utils.errorResponse(res, error);
+        }
+    },
+
+    async show(req, res) {
+        try {
+            const { id } = req.params;
+
+            validateSchema.validate(schemaShow, req.params);
+
+            const selectedTotalDeal = await TotalDeal.findOne({ _id: id });
 
             res.json({ ok: true, data: selectedTotalDeal });
 
@@ -21,9 +43,11 @@ module.exports = {
 
     async showByDate(req, res) {
         try {
-            const { date } = req.query;
+            const { date_start, date_end } = req.query;
 
-            const selectedTotalDeal = await findByDate(date);
+            validateSchema.validate(schemaGetByDate, req.query);
+
+            const selectedTotalDeal = await findByDate(date_start, date_end || date_start);
 
             res.json({ ok: true, data: selectedTotalDeal });
 
@@ -36,8 +60,10 @@ module.exports = {
         try {
             const { value, date } = req.body;
 
+            validateSchema.validate(schemaCreate, req.body);
+
             const data = {}
-            const totalDealSelected = await findByDate(date);
+            const [totalDealSelected] = await findByDate(date, date);
 
             if(totalDealSelected) {
                 data.total_deal_id = totalDealSelected._id;
@@ -64,18 +90,18 @@ module.exports = {
     },
 }
 
-const findByDate = async (date) => {
-    const start = new Date(date);
+const findByDate = async (dateStart, dateEnd) => {
+    const start = new Date(dateStart);
     start.setHours(0);
     start.setMinutes(0);
     start.setSeconds(0);
 
-    const end = new Date(date);
+    const end = new Date(dateEnd);
     end.setHours(23);
     end.setMinutes(59);
     end.setSeconds(59);
 
-    const totalDealByDay = await TotalDeal.findOne({date: { $gte: start, $lte: end }});
+    const totalDealByDay = await TotalDeal.find({date: { $gte: start, $lte: end }});
 
     return totalDealByDay;
 }

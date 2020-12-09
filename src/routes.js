@@ -14,6 +14,7 @@ routes.get('/pipedrive/database/:id', PipedriveController.show);
 
 routes.get('/deal/total', TotalDealController.index);
 routes.get('/deal/total/date', TotalDealController.showByDate);
+routes.get('/deal/total/:id', TotalDealController.show);
 routes.post('/deal/total', TotalDealController.create);
 
 module.exports = routes;
