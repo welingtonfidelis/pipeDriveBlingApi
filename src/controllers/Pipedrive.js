@@ -1,6 +1,13 @@
 const js2xmlparser = require("js2xmlparser");
 const axios = require('axios');
 const utils = require('../utils');
+const validateSchema = require('../services/validateSchema');
+const schemaGet = require('../services/schemas/pipedrive/get');
+const schemaShow = require('../services/schemas/pipedrive/show');
+
+const TotalDeal = require('../controllers/TotalDeal');
+
+const PipedriveDeal = require('../models/PipedriveDeal');
 
 const API_URL_BLING = process.env.API_URL_BLING;
 const API_KEY_BLING = process.env.API_KEY_BLING;
@@ -16,20 +23,21 @@ const statusEnum = module.exports = Object.freeze({
 module.exports = {
     async receiveFromPipe(req, res) {
         try {
-            // console.log('CHEGANDO DA API', req.body);
-    
-            let data = { }
+            console.log('START ====> \n', req.body, '\n <==== END');
+
+            let data = {}
             const { current = {} } = req.body;
-            const { 
-                id, title, value, update_time, 
-                status, person_name, owner_name 
+            const {
+                id, title, value, update_time,
+                status, person_name, owner_name
             } = current;
-    
-            if(status === 'won') {
+
+            if (status === 'won') {
                 const obj = {
-                    datacompra: utils.onlyDate(update_time),
-                    dataprevista: utils.onlyDate(update_time),
+                    datacompra: utils.dateTimeToDate(update_time),
+                    dataprevista: utils.dateTimeToDate(update_time),
                     observacoes: `${title} ${statusEnum[status]['pt_BR']} por ${owner_name}.`,
+                    status,
                     fornecedor: {
                         id: '10470108791',
                         nome: 'Fornecedor teste 1',
@@ -73,9 +81,9 @@ module.exports = {
                         frete: (0.0).toFixed(2),
                     }
                 }
-        
+
                 const xml = js2xmlparser.parse("pedidocompra", obj);
-        
+
                 const response = await axios.post(
                     `${API_URL_BLING}/pedidocompra/json`,
                     {},
@@ -88,10 +96,50 @@ module.exports = {
                 );
 
                 data = response.data || response
+                const { _id: created_deal_id } = await PipedriveDeal.create(obj);
+                
+                TotalDeal.create({ body: { value, date: update_time } }, null);
+
+                data = { created_deal_id, bling_response: data }
             }
 
+
             res.json({ ok: true, data });
-            
+
+        } catch (error) {
+            utils.errorResponse(res, error);
+        }
+    },
+
+    async index(req, res) {
+        try {
+            const { page = 1, limit = 2 } = req.query;
+
+            validateSchema.validate(schemaGet, req.query);
+
+            const countDeal = await PipedriveDeal.countDocuments();
+            const selectedDeal = await PipedriveDeal
+                .find()
+                .skip((page - 1) * limit)
+                .limit(parseInt(limit));
+
+            res.json({ ok: true, total: countDeal, data: selectedDeal });
+
+        } catch (error) {
+            utils.errorResponse(res, error);
+        }
+    },
+
+    async show(req, res) {
+        try {
+            const { id } = req.params;
+
+            validateSchema.validate(schemaShow, req.params);
+
+            const selectedDeal = await PipedriveDeal.findOne({ _id: id });
+
+            res.json({ ok: true, data: selectedDeal });
+
         } catch (error) {
             utils.errorResponse(res, error);
         }

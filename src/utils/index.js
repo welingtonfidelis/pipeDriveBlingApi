@@ -8,7 +8,7 @@ module.exports = {
         res.status(code).json({ ok: false, message });
     },
 
-    onlyDate(dateStr) {
+    dateTimeToDate(dateStr) {
         const date = new Date(dateStr);
 
         const year = date.getFullYear();
