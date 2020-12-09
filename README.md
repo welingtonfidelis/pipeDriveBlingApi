@@ -6,9 +6,9 @@ API construida em Node.js, express e MongDB com finalizada de receber dados (via
 
 ## Requisitos
 * [Node.js] - versão  ou superior;
-* [mongoDB] - uma conexão com banco mongoDB é necessária, podendo ser um banco executando em seu computador ou nuvem (ex.: [mongoDB_Atlas]);
+* [mongoDB] - uma conexão com banco mongoDB é necessária, podendo ser um banco executando em seu computador ou nuvem (ex.: [mongoDB Atlas]);
 * [Pipedrive_webhook] - uma conta cadastrada na plataforma [Pipedrive] e um webhook configurado na mesma plataforma, apontando para uma API externa onde as requisições com alterações de pedidos/vendas serão enviadas;
-* [Conta_Bling] - criar uma conta na plataforma [Bling] e criar um usuário para acesso à API deles ([API_Bling]). O token de acesso deste usuário será utilizado na API deste repositório. **Obs.:** É importante que o usuário criado na plataforma [Bling] possua ao menos permissões de inclusão e edição de pedido de vendas na plataforma.
+* [Conta Bling] - criar uma conta na plataforma [Bling] e criar um usuário para acesso à API deles ([API Bling]). O token de acesso deste usuário será utilizado na API deste repositório. **Obs.:** É importante que o usuário criado na plataforma [Bling] possua ao menos permissões de inclusão e edição de pedido de vendas na plataforma.
 
 ---
 
@@ -603,6 +603,7 @@ Sem body
 }
 ```
 
+[Neste link] é possível baixar a collection do [Postman] com as rotas mostradas acima. 
 ---
 
 ## Contato
@@ -613,9 +614,10 @@ Sugestões e pull requests são sempre bem vindos. 🤓
 [Bling]: <https://www.bling.com.br/>
 [Pipedrive]: <https://www.pipedrive.com/>
 [mongoDB]: <https://www.mongodb.com/>
-[mongoDB_Atlas]: <https://www.mongodb.com/cloud/atlas>
-[API_Bling]: <https://ajuda.bling.com.br/hc/pt-br/articles/360046937853-Introdu%C3%A7%C3%A3o-para-a-API-do-Bling-para-desenvolvedores->
+[mongoDB Atlas]: <https://www.mongodb.com/cloud/atlas>
+[API Bling]: <https://ajuda.bling.com.br/hc/pt-br/articles/360046937853-Introdu%C3%A7%C3%A3o-para-a-API-do-Bling-para-desenvolvedores->
 [Node.js]: <https://nodejs.org/en/>
 [Pipedrive_webhook]: <https://pipedrive.readme.io/docs/guide-for-webhooks>
-[Conta_Bling]: <https://www.bling.com.br/inscricao/plano-mercurio>
+[Conta Bling]: <https://www.bling.com.br/inscricao/plano-mercurio>
 [Postman]: <https://www.postman.com/downloads/>
+[Neste link]: <https://drive.google.com/file/d/17ayxSqGB65yq8Gx5a_JY3uud5hYw1-Cs/view?usp=sharing>
