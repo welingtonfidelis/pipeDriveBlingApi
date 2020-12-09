@@ -103,7 +103,6 @@ module.exports = {
                 data = { created_deal_id, bling_response: data }
             }
 
-
             res.json({ ok: true, data });
 
         } catch (error) {

@@ -1,10 +1,10 @@
 require('dotenv').config();
+require('./database/connection');
 
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const routes = require('./routes');
-const mongooseConn = require('./database/connection');
 
 const port = 3001;
 
