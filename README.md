@@ -604,6 +604,7 @@ Sem body
 ```
 
 [Neste link] é possível baixar a collection do [Postman] com as rotas mostradas acima. 
+
 ---
 
 ## Contato
