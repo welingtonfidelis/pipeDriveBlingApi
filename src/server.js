@@ -15,3 +15,5 @@ app.use(routes);
 app.listen(process.env.PORT || port, function () {
     console.log(`🚀 Server running in ${port}\n`);
 });
+
+module.exports = app;
